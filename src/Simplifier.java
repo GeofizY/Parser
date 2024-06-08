@@ -13,15 +13,13 @@ public class Simplifier {
             }
         }
 
-        if (expression instanceof Operation) {
-            Operation binaryNode = (Operation) expression;
+        if (expression instanceof Operation binaryNode) {
             Node left = simplifyExpression(binaryNode.getLeft());
             Node right = simplifyExpression(binaryNode.getRight());
             Node simplifiedNode = new Operation(left, right, binaryNode.getOperator());
             subexpressions.add(simplifiedNode);
             return simplifiedNode;
-        } else if (expression instanceof MathFunction) {
-            MathFunction MathFunction = (MathFunction) expression;
+        } else if (expression instanceof MathFunction MathFunction) {
             Node[] arguments = MathFunction.getArguments();
             Node[] simplifiedArguments = new Node[arguments.length];
             for (int i = 0; i < arguments.length; i++) {
