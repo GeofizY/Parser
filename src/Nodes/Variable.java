@@ -16,4 +16,9 @@ public class Variable implements Node {
         }
         return variables.get(name);
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

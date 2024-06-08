@@ -30,10 +30,10 @@ public class Parser {
     private Node parseMultDiv() {
         Node result = parseFactor();
         while (pos < expression.length()) {
-            char op = expression.charAt(pos);
-            if (op == '*' || op == '/') {
+            char operator = expression.charAt(pos);
+            if (operator == '*' || operator == '/') {
                 pos++;
-                result = new Operation(result, parseFactor(), op);
+                result = new Operation(result, parseFactor(), operator);
             } else {
                 break;
             }

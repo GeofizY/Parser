@@ -19,4 +19,25 @@ public class MathFunction implements Node {
             default: throw new IllegalArgumentException("Unknown function: " + functionName);
         }
     }
+
+    public String getFunctionName() {
+        return functionName;
+    }
+
+    public Node[] getArguments() {
+        return arguments;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(functionName + "(");
+        for (int i = 0; i < arguments.length; i++) {
+            sb.append(arguments[i].toString());
+            if (i < arguments.length - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append(")");
+        return sb.toString();
+    }
 }

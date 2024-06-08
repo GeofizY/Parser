@@ -26,4 +26,21 @@ public class Operation implements Node {
             default: throw new IllegalArgumentException("Unknown operator: " + operator);
         }
     }
+
+    public Node getLeft() {
+        return left;
+    }
+
+    public Node getRight() {
+        return right;
+    }
+
+    public char getOperator() {
+        return operator;
+    }
+    @Override
+    public String toString() {
+        return "(" + left.toString() + " " + operator + " " + right.toString() + ")";
+    }
+
 }
