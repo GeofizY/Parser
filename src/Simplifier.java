@@ -4,52 +4,35 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Simplifier {
-    private final List<String> cacheKeys = new ArrayList<>();
-    private final List<Node> cacheValues = new ArrayList<>();
+    private final List<Node> subexpressions = new ArrayList<>();
 
-    public Node simplifyExpression(Node expr) {
-        if (expr instanceof Operation) {
-            Operation binOp = (Operation) expr;
-            Node left = simplifyExpression(binOp.getLeft());
-            Node right = simplifyExpression(binOp.getRight());
-            String key = left.toString() + binOp.getOperator() + right.toString();
+    public Node simplifyExpression(Node expression) {
+        for (Node node : subexpressions) {
+            if (expression.toString().equals(node.toString())) {
+                return node;
+            }
+        }
 
-            int cacheIndex = cacheKeys.indexOf(key);
-            if (cacheIndex != -1) {
-                return cacheValues.get(cacheIndex);
-            } else {
-                Node simplified = new Operation(left, right, binOp.getOperator());
-                cacheKeys.add(key);
-                cacheValues.add(simplified);
-                return simplified;
+        if (expression instanceof Operation) {
+            Operation binaryNode = (Operation) expression;
+            Node left = simplifyExpression(binaryNode.getLeft());
+            Node right = simplifyExpression(binaryNode.getRight());
+            Node simplifiedNode = new Operation(left, right, binaryNode.getOperator());
+            subexpressions.add(simplifiedNode);
+            return simplifiedNode;
+        } else if (expression instanceof MathFunction) {
+            MathFunction MathFunction = (MathFunction) expression;
+            Node[] arguments = MathFunction.getArguments();
+            Node[] simplifiedArguments = new Node[arguments.length];
+            for (int i = 0; i < arguments.length; i++) {
+                simplifiedArguments[i] = simplifyExpression(arguments[i]);
             }
-        } else if (expr instanceof MathFunction) {
-            MathFunction funcCall = (MathFunction) expr;
-            Node[] args = new Node[funcCall.getArguments().length];
-            for (int i = 0; i < funcCall.getArguments().length; i++) {
-                args[i] = simplifyExpression(funcCall.getArguments()[i]);
-            }
-            StringBuilder keyBuilder = new StringBuilder(funcCall.getFunctionName() + "(");
-            for (int i = 0; i < args.length; i++) {
-                keyBuilder.append(args[i].toString());
-                if (i < args.length - 1) {
-                    keyBuilder.append(", ");
-                }
-            }
-            keyBuilder.append(")");
-            String key = keyBuilder.toString();
-
-            int cacheIndex = cacheKeys.indexOf(key);
-            if (cacheIndex != -1) {
-                return cacheValues.get(cacheIndex);
-            } else {
-                Node simplified = new MathFunction(funcCall.getFunctionName(), args);
-                cacheKeys.add(key);
-                cacheValues.add(simplified);
-                return simplified;
-            }
+            Node simplifiedNode = new MathFunction(MathFunction.getFunctionName(), simplifiedArguments);
+            subexpressions.add(simplifiedNode);
+            return simplifiedNode;
         } else {
-            return expr;
+            subexpressions.add(expression);
+            return expression;
         }
     }
 }
